@@ -1,9 +1,7 @@
 from django.forms import ModelForm, ImageField
-from .models import Room, Post, User
+from .models import Room, Post, User, NewStudent, NewTeacher
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from datetimepicker.widgets import DateTimePicker
-
 
 class MyUserCreationForm(UserCreationForm):
     class Meta:
@@ -16,22 +14,53 @@ class MyUserCreationForm(UserCreationForm):
         fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
 
 
+class NewTeacherForm(forms.ModelForm):
+    class Meta:
+        model = NewTeacher
+
+        labels = {
+            'name': 'Imie i nazwisko korepetytora',
+            'phone_number': 'Numer telefonu',
+            'school': 'Najwyższy osiągnięty stopień edukacji',
+            'age': 'Wiek',
+            'language': 'Czy znasz język polski na poziomie ojczystym?'
+        }
+
+        fields = ['name', 'phone_number', 'school', 'age', 'language']
+
+
+
 class ApplyTeacherForm(UserCreationForm):
     class Meta:
         model = User
 
         labels = {
-            'username': 'Nazwa użytkownika',
+            'username': 'Nazwa użytkownika (będzie używana w Strefie Wiedzy)',
         }
 
         fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
+
+
+class NewStudentForm(forms.ModelForm):
+    class Meta:
+        model = NewStudent
+
+        labels = {
+            'name': 'Imie i nazwisko ucznia',
+            'phone_number': 'Numer telefonu',
+            'subject': 'Wybierz przedmiot',
+            'school': 'Stopień edukacji',
+            'level': 'Wybierz rodzaj zajęć',
+        }
+
+        fields = ['name', 'phone_number', 'subject', 'school', 'level']
 
 class ApplyStudentForm(UserCreationForm):
     class Meta:
         model = User
 
         labels = {
-            'username': 'Nazwa użytkownika',
+            'username': 'Nazwa użytkownika (będzie używana w Strefie Wiedzy)',
         }
 
         fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
@@ -53,16 +82,17 @@ class UserForm(ModelForm):
 
 
 class PostForm(forms.ModelForm):
+    event_datetime = forms.DateTimeField(
+        widget=forms.TextInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+        label='Data',  # You can customize the label here
+        input_formats=['%Y-%m-%dT%H:%M'],  # Define the input format (adjust it to your needs)
+    )
+
     class Meta:
         model = Post
         labels = {
             'title': 'Tytuł',
             'description': 'Opis',
             'course': 'Kurs',
-            'event_datetime': 'Data',
         }
         fields = ['title', 'description', 'course', 'event_datetime']
-        widgets = {
-            'event_datetime': DateTimePicker(options={"format": "YYYY-MM-DD HH:mm:ss"})
-        }
-

@@ -1586,4 +1586,30 @@ p{
   }
 }
 
+.center-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.errorlist{
+    list-style-type: none;
+    color: red;
+    padding: 0;
+    margin: 0;
+}
+
+ul.messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul.messages li {
+    margin-bottom: 10px;
+    padding: 0;
+    color: red;
+}
+
 

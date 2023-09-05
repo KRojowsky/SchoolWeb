@@ -1326,3 +1326,22 @@ a {
   color: var(--color-main);
   font-weight: 1.4rem;
 }
+
+.errorlist{
+    list-style-type: none;
+    color: red;
+    padding: 0;
+    margin: 0;
+}
+
+ul.messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul.messages li {
+    margin-bottom: 10px;
+    padding: 0;
+    color: red;
+}

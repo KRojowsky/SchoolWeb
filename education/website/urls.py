@@ -44,6 +44,8 @@ urlpatterns = [
 
     path('apply-teacher/', views.applyTeacher, name="applyTeacher"),
     path('apply-student/', views.applyStudent, name="applyStudent"),
+    path('new-student/', views.newStudent, name='newStudent'),
+    path('new-teacher/', views.newTeacher, name='newTeacher'),
 
     path('update-user-students/', views.updateUserStudents, name="update-user-students"),
     path('update-user-teachers/', views.updateUserTeachers, name="update-user-teachers"),

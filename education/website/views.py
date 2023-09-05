@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from .models import User, Room, Topic, Message, Course, Post, CourseMessage, ContactMessage
-from .forms import RoomForm, UserForm, PostForm, MyUserCreationForm, UserCreationForm, ApplyTeacherForm, ApplyStudentForm
+from .forms import RoomForm, UserForm, PostForm, MyUserCreationForm, UserCreationForm, ApplyTeacherForm, ApplyStudentForm, NewStudentForm, NewTeacherForm
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from django.contrib.auth.models import Group
@@ -86,6 +86,7 @@ def contact_view(request):
 
 def loginPage(request):
     page = 'login'
+
     if request.user.is_authenticated:
         return redirect('dashboard')
 
@@ -94,16 +95,17 @@ def loginPage(request):
         password = request.POST.get('password')
 
         try:
-            user = User.objects.get(username=email)
+            user = User.objects.get(email=email)
         except:
-            messages.error(request, "Podany użytkownik nie istnieje.")
+            messages.error(request, 'Użytkownik nie istnieje')
 
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, email=email, password=password)
+
         if user is not None:
             login(request, user)
             return redirect('dashboard')
         else:
-            messages.error(request, "Nazwa użytkownika lub hasło nie istnieje.")
+            messages.error(request, 'Błędny Email lub Hasło')
 
     context = {'page': page}
     return render(request, 'website/login_register.html', context)
@@ -132,14 +134,7 @@ def registerPage(request):
             return redirect('dashboard')
 
         else:
-            # Wyświetlanie komunikatów o błędach formularza
-            errors = form.errors.as_data()
-            for field, field_errors in errors.items():
-                for error in field_errors:
-                    messages.error(request, f"{field}: {error.message}")
-
-            # Dodanie błędów formularza do kontekstu
-            form._errors = ErrorList()
+            messages.error(request, 'Wystąpił problem podczas rejestracji')
 
     context = {'form': form}
     return render(request, 'website/login_register.html', context)
@@ -288,22 +283,28 @@ def activityPage(request):
 def lessonsLogin(request):
     page = 'lessonsLogin'
 
+    if request.user.groups.filter(name='NewStudents').exists() or request.user.groups.filter(
+            name='NewTeachers').exists():
+        return redirect('coursesLoader')
+
     if request.method == 'POST':
-        username = request.POST.get('username').lower()
+        email = request.POST.get('email').lower()
         password = request.POST.get('password')
 
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(email=email)
         except:
             messages.error(request, 'Użytkownik nie istnieje')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=email, password=password)
 
         if user is not None and (user.groups.filter(name='Students').exists() or
                                  user.groups.filter(name='Teachers').exists() or
                                  user.groups.filter(name='NONE').exists() or
                                  user.groups.filter(name='Writers').exists() or
-                                 user.groups.filter(name='Migrates').exists()):
+                                 user.groups.filter(name='Migrates').exists() or
+                                 user.groups.filter(name='NewStudents').exists() or
+                                 user.groups.filter(name='NewTeachers').exists()):
             if user.groups.filter(name='Teachers').exists():
                 login(request, user)
                 return redirect('teacherPage')
@@ -320,12 +321,17 @@ def lessonsLogin(request):
             elif user.groups.filter(name='Writers').exists():
                 change_user_group(user, 'Migrates')
                 return redirect('coursesLoader')
+            elif user.groups.filter(name='NewStudents').exists():
+                login(request, user)
+                return redirect('coursesLoader')
+            elif user.groups.filter(name='NewTeachers').exists():
+                login(request, user)
+                return redirect('coursesLoader')
         else:
-            messages.error(request, 'Nazwa użytkownika lub hasło nie istnieje')
+            messages.error(request, 'Błędny Email lub Hasło')  # Moved error message here
 
     context = {'page': page}
     return render(request, 'website/login_register_lessons.html', context)
-
 
 def lessonsRegister(request):
     form = MyUserCreationForm()
@@ -352,6 +358,9 @@ def lessonsLogout(request):
 
 def coursesLoader(request):
     return render(request, 'website/userCreator.html')
+
+def migrateCreator(request):
+    return render(request, 'website/migrateCreator.html')
 
 def noLessons(request):
     return render(request, 'website/noLessons.html')
@@ -582,6 +591,19 @@ def deleteLessonMessage(request, pk):
     return render(request, 'website/deleteLessons.html', context)
 
 
+def newTeacher(request):
+    if request.method == 'POST':
+        form = NewTeacherForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('applyTeacher'))  # Redirect to a success page
+    else:
+        form = NewTeacherForm()
+
+    context = {'form': form}
+    return render(request, 'website/newTeacher.html', context)
+
+
 def applyTeacher(request):
     if request.method == 'POST':
         form = ApplyTeacherForm(request.POST)
@@ -593,6 +615,20 @@ def applyTeacher(request):
     else:
         form = ApplyTeacherForm()
     return render(request, 'website/applyTeacher.html', {'form': form})
+
+
+def newStudent(request):
+    if request.method == 'POST':
+        form = NewStudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('applyStudent'))  # Redirect to a success page
+    else:
+        form = NewStudentForm()
+
+    context = {'form': form}
+    return render(request, 'website/newStudent.html', context)
+
 
 
 def applyStudent(request):

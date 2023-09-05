@@ -6,10 +6,11 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
 	<link href="{% static "css/widget.css" %}" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" type="image/x-icon" href="{% static 'img/logo.png' %}">
 	<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-	<title>SchoolWeb | Twórz najlepszą platformę edukacyjną</title>
+	<title>SchoolWeb | Stwórz najlepszą platformę edukacyjną</title>
 </head>
 
 <body>
@@ -45,17 +46,18 @@
 
 	<section id = "hero" class="hero">
 		<h1 class="hero-heading">Stwórz z nami
-		<span style="color: #bb00ff;">najlepszą platformę edukacyjną</span></h1>
+			<span style="color: #bb00ff;">najlepszą platformę edukacyjną</span>
+		</h1>
 
 		<div class="container">
-			<p class="hero-subtitle"><span style="color: #bb00ff;">✔</span> Indywidualne oraz grupowe zajęcia od 35zł.
+			<p class="hero-subtitle "><span style="color: #bb00ff;">✔</span> Indywidualne oraz grupowe zajęcia od 35zł.
 				<br><span style="color: #bb00ff;">✔</span> Sprawdzeni oraz kopetentni korepetytorzy.
 				<br><span style="color: #bb00ff;">✔</span> Darmowe materiały edukacyjne.
 				<br><span style="color: #bb00ff;">✔</span> Szybki kontakt z administracją platformy.
 				<br><span style="color: #bb00ff;">✔</span> Kontakt z korepetytorami po godzinach.
 				<br><span style="color: #bb00ff;">✔</span> Nieograniczony dostęp do forum edukacyjnego.
 				<br>
-				<a href="{% url 'applyStudent' %}" class="hvr-buzz-out">✔ Umów pierwsze zajęcia</a>
+				<a href="{% url 'newStudent' %}" class="hvr-buzz-out center-link">Umów pierwsze zajęcia</a>
 			</p>
 			<div class="hero-image">
 				<img src="{% static 'img/students.png' %}" alt="Image description">
@@ -190,9 +192,6 @@
 				  aplikacji komunikacyjnej oraz tablicy wirtualnej.</li>
 				</ul>
 			</div>
-			<div class="pricing-button">
-				<a href="#">Zarezerwuj pierwsze zajęcia</a>
-			</div>
 		  </div>
 		  <div class="pricing-plan">
 			<div class="content">
@@ -207,9 +206,6 @@
 				  <li>✔ Zajęcia odbywające się na łatwej i przyjemnej w obsłudze
 				  aplikacji komunikacyjnej oraz tablicy wirtualnej.</li>
 				</ul>
-			</div>
-			<div class="pricing-button">
-				<a href="#">Zarezerwuj pierwsze zajęcia</a>
 			</div>
 		  </div>
 		  <div class="pricing-plan">
@@ -226,9 +222,6 @@
 				  <br>
 				  <li>Możliwość kupna pakietu na okres: od 1 tygodnia do 3 miesięcy</li>
 				</ul>
-			  </div>
-			  <div class="pricing-button">
-			  	<a href="#">Zarezerwuj pierwsze zajęcia</a>
 			  </div>
 		  </div>
 		</div>
@@ -248,16 +241,16 @@
 			  <p class="testimonial-author">- Ania</p>
 		  </div>
 		  <div class="testimonial">
-			  <img src="{% static 'img/op.jpg' %}" alt="User 1">
-			  <p class="testimonial-author">- Emilka</p>
+			  <img src="{% static 'img/opinion3.jpg' %}" alt="User 1">
+			  <p class="testimonial-author">- Anonim</p>
 		  </div>
 		  <div class="testimonial">
-			  <img src="{% static 'img/op.jpg' %}" alt="User 1">
-			  <p class="testimonial-author">- Emilka</p>
+			  <img src="{% static 'img/opinion4.jpg' %}" alt="User 1">
+			  <p class="testimonial-author">- Klaudia</p>
 		  </div>
 		  <div class="testimonial">
-			  <img src="{% static 'img/op.jpg' %}" alt="User 1">
-			  <p class="testimonial-author">- Emilka</p>
+			  <img src="{% static 'img/opinion5.jpg' %}" alt="User 1">
+			  <p class="testimonial-author">- Anonim</p>
 		  </div>
 		</div>
 	</section>
@@ -366,20 +359,33 @@
 	</style>
 
 	<script>
-		// JavaScript for responsive navigation
-		const hamburgerMenu = document.querySelector('.hamburger-menu');
-		const navLinks = document.querySelector('.nav-links');
+	  // JavaScript for responsive navigation
+	  const hamburgerMenu = document.querySelector('.hamburger-menu');
+	  const navLinks = document.querySelector('.nav-links');
+	  const navOptions = navLinks.querySelectorAll('.nav-option'); // Select all menu options
 
-		hamburgerMenu.addEventListener('click', () => {
-		  navLinks.classList.toggle('show');
+	  // Toggle menu display on hamburger menu click
+	  hamburgerMenu.addEventListener('click', () => {
+		navLinks.classList.toggle('show');
+	  });
+
+	  // Close the menu when a menu option is clicked
+	  navOptions.forEach(option => {
+		option.addEventListener('click', () => {
+		  navLinks.classList.remove('show');
 		});
-  	</script>
+	  });
+	</script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
 	<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+
 	<script type="text/javascript">
-	$('.main-carousel').flickity({
-	  cellAlign: 'left',
-	  wrapAround: true,
-	  freeScroll: true
+	$(document).ready(function() {
+	  $('.main-carousel').flickity({
+		cellAlign: 'left',
+		wrapAround: true,
+		freeScroll: true
+	  });
 	});
 	</script>
 </body>
